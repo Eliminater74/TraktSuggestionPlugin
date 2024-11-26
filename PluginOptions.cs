@@ -1,26 +1,20 @@
-﻿namespace TraktSuggestionPlugin
+﻿using MediaBrowser.Model.Plugins;
+
+namespace TraktSuggestionPlugin
 {
-    using System.ComponentModel;
-    using Emby.Web.GenericEdit;
-    using Emby.Web.GenericEdit.Validation;
-
-    public class PluginOptions : EditableOptionsBase
+    public class PluginOptions : BasePluginConfiguration
     {
-        public override string EditorTitle => "Trakt Suggestion Plugin Options";
-
-        public override string EditorDescription => "Set your Trakt Access Token to fetch personalized movie suggestions.";
-
-        [DisplayName("Trakt Access Token")]
-        [Description("Enter your Trakt API Access Token. This is required for the plugin to work.")]
-        [MediaBrowser.Model.Attributes.Required]
+        public string ClientId { get; set; }
+        public string ClientSecret { get; set; }
         public string AccessToken { get; set; }
+        public string Username { get; set; }
 
-        protected override void Validate(ValidationContext context)
+        public PluginOptions()
         {
-            if (string.IsNullOrWhiteSpace(AccessToken))
-            {
-                context.AddValidationError(nameof(AccessToken), "Access Token is required.");
-            }
+            ClientId = string.Empty;
+            ClientSecret = string.Empty;
+            AccessToken = string.Empty;
+            Username = string.Empty;
         }
     }
 }
