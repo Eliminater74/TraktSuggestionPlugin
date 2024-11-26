@@ -2,11 +2,13 @@
 using MediaBrowser.Common.Plugins;
 using MediaBrowser.Model.Serialization;
 using MediaBrowser.Model.Logging;
+using MediaBrowser.Model.Plugins;
 using MediaBrowser.Common.Configuration;
+using System.Collections.Generic;
 
 namespace TraktSuggestionPlugin
 {
-    public class Plugin : BasePlugin<PluginOptions>
+    public class Plugin : BasePlugin<PluginOptions>, IHasWebPages
     {
         private readonly ILogger _logger;
 
@@ -24,5 +26,19 @@ namespace TraktSuggestionPlugin
         public override string Name => "Trakt Suggestion Plugin";
 
         public override string Description => "Provides personalized movie suggestions from Trakt for each user.";
+
+        // Register the settings page
+        public IEnumerable<PluginPageInfo> GetPages()
+        {
+            return new[]
+            {
+                new PluginPageInfo
+                {
+                    Name = "TraktSuggestions",
+                    EmbeddedResourcePath = $"{GetType().Namespace}.Configuration.TraktSuggestions.html",
+                    EnableInMainMenu = false // Only available in the plugin settings
+                }
+            };
+        }
     }
 }
