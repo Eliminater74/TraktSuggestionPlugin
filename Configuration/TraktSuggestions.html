@@ -2,6 +2,7 @@
     <h1>Trakt Suggestion Plugin Settings</h1>
     <p>Enter your Trakt API credentials below:</p>
 
+    <!-- Trakt Client ID -->
     <div class="form-group">
         <label class="col-sm-3 control-label" for="ClientId">Trakt Client ID:</label>
         <div class="col-sm-9">
@@ -9,6 +10,7 @@
         </div>
     </div>
 
+    <!-- Trakt Client Secret -->
     <div class="form-group">
         <label class="col-sm-3 control-label" for="ClientSecret">Trakt Client Secret:</label>
         <div class="col-sm-9">
@@ -16,10 +18,25 @@
         </div>
     </div>
 
+    <!-- Trakt Access Token -->
     <div class="form-group">
         <label class="col-sm-3 control-label" for="AccessToken">Trakt Access Token:</label>
         <div class="col-sm-9">
             <input type="text" id="AccessToken" class="form-control" data-bind="value:AccessToken">
+        </div>
+    </div>
+
+    <!-- Section for Generating Access Token -->
+    <hr>
+    <div class="form-group">
+        <label class="col-sm-3 control-label" for="GenerateAccessToken">Generate Access Token:</label>
+        <div class="col-sm-9">
+            <p>
+                You can generate an Access Token by visiting the Trakt API token generation page:
+                <a href="https://trakt.tv/oauth/authorize" target="_blank" class="btn btn-primary">
+                    Generate Access Token
+                </a>
+            </p>
         </div>
     </div>
 </div>
