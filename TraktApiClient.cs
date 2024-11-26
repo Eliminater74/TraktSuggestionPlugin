@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using TraktNet;
 using TraktNet.Objects.Get.Movies;
-using TraktNet.Responses;
 
 namespace TraktSuggestionPlugin
 {
@@ -12,41 +11,24 @@ namespace TraktSuggestionPlugin
     {
         private readonly TraktClient _client;
 
-        public TraktApiClient(string clientId, string clientSecret, string accessToken = null)
+        public TraktApiClient(string accessToken)
         {
-            if (string.IsNullOrEmpty(clientId) || string.IsNullOrEmpty(clientSecret))
-                throw new ArgumentNullException("Client ID and Client Secret must be provided.");
-
-            _client = new TraktClient(clientId)
+            // Provide a dummy Client ID; it won't be used with an Access Token only
+            _client = new TraktClient("dummy-client-id")
             {
-                ClientSecret = clientSecret
+                Authorization = TraktNet.Objects.Authentication.TraktAuthorization.CreateWith(accessToken)
             };
-
-            if (!string.IsNullOrEmpty(accessToken))
-            {
-                _client.Authorization = TraktNet.Objects.Authentication.TraktAuthorization.CreateWith(accessToken);
-            }
         }
 
-        // Fetch trending movies from Trakt
         public async Task<IEnumerable<ITraktMovie>> GetTrendingMoviesAsync()
         {
-            try
+            var response = await _client.Movies.GetTrendingMoviesAsync();
+            if (!response.IsSuccess)
             {
-                TraktPagedResponse<ITraktTrendingMovie> response = await _client.Movies.GetTrendingMoviesAsync();
-
-                if (!response.IsSuccess)
-                {
-                    throw new Exception($"Failed to fetch trending movies: {response.Exception?.Message}");
-                }
-
-                // Extract the list of movies
-                return response.Value.Select(trendingMovie => trendingMovie.Movie);
+                throw new Exception($"Failed to fetch trending movies: {response.Exception?.Message}");
             }
-            catch (Exception ex)
-            {
-                throw new Exception($"Error fetching trending movies: {ex.Message}");
-            }
+            return response.Value.Select(trendingMovie => trendingMovie.Movie);
         }
     }
+
 }
