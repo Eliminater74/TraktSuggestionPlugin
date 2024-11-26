@@ -24,8 +24,5 @@ namespace TraktSuggestionPlugin
         public override string Name => "Trakt Suggestion Plugin";
 
         public override string Description => "Provides personalized movie suggestions from Trakt for each user.";
-
-        // Access the plugin's configuration
-        public PluginOptions Configuration => Instance.Configuration;
     }
 }
