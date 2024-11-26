@@ -1,44 +1,42 @@
-﻿using MediaBrowser.Common;
-using MediaBrowser.Common.Plugins;
-using MediaBrowser.Model.Serialization;
-using MediaBrowser.Model.Logging;
-using MediaBrowser.Model.Plugins;
-using MediaBrowser.Common.Configuration;
-using System.Collections.Generic;
-
-namespace TraktSuggestionPlugin
+﻿namespace TraktSuggestionPlugin
 {
-    public class Plugin : BasePlugin<PluginOptions>, IHasWebPages
+    using System;
+    using System.IO;
+
+    using MediaBrowser.Common;
+    using MediaBrowser.Common.Plugins;
+    using MediaBrowser.Controller.Plugins;
+    using MediaBrowser.Model.Drawing;
+    using MediaBrowser.Model.Logging;
+
+    public class Plugin : BasePluginSimpleUI<PluginOptions>, IHasThumbImage
     {
-        private readonly ILogger _logger;
+        private readonly Guid id = new Guid("90011765-13A5-4699-91E1-830AAC746FAB"); // Replace with your GUID
+        private readonly ILogger logger;
 
-        // Static instance of the plugin
-        public static Plugin Instance { get; private set; }
-
-        public Plugin(IApplicationPaths applicationPaths, IXmlSerializer xmlSerializer, ILogManager logManager)
-            : base(applicationPaths, xmlSerializer)
+        public Plugin(IApplicationHost applicationHost, ILogManager logManager) : base(applicationHost)
         {
-            Instance = this; // Assign the current instance to the static property
-            _logger = logManager.GetLogger(Name);
-            _logger.Info("Trakt Suggestion Plugin has been loaded.");
+            this.logger = logManager.GetLogger(this.Name);
+            this.logger.Info("Trakt Suggestion Plugin ({0}) is getting loaded", this.Name);
         }
+
+        public override string Description => "Provides personalized movie suggestions from Trakt.";
+
+        public override Guid Id => this.id;
 
         public override string Name => "Trakt Suggestion Plugin";
 
-        public override string Description => "Provides personalized movie suggestions from Trakt for each user.";
+        public ImageFormat ThumbImageFormat => ImageFormat.Png;
 
-        // Register the settings page
-        public IEnumerable<PluginPageInfo> GetPages()
+        public Stream GetThumbImage()
         {
-            return new[]
-            {
-                new PluginPageInfo
-                {
-                    Name = "TraktSuggestions",
-                    EmbeddedResourcePath = $"{GetType().Namespace}.Configuration.TraktSuggestions.html",
-                    EnableInMainMenu = false // Only available in the plugin settings
-                }
-            };
+            var type = this.GetType();
+            return type.Assembly.GetManifestResourceStream(type.Namespace + ".ThumbImage.png");
+        }
+
+        protected override void OnOptionsSaved(PluginOptions options)
+        {
+            this.logger.Info("Trakt Suggestion Plugin options have been updated: Username={0}, AccessToken={1}", options.Username, options.AccessToken);
         }
     }
 }
