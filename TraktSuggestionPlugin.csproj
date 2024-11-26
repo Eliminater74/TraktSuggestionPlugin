@@ -5,9 +5,11 @@
     <PackageTags>emby;plugin;pms;media;server;</PackageTags>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Configuration\TraktSuggestions.html" />
     <None Remove="ThumbImage.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Configuration\TraktSuggestions.html" />
     <EmbeddedResource Include="ThumbImage.png" />
   </ItemGroup>
   <ItemGroup>
