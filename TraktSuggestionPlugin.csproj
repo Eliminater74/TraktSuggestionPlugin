@@ -1,21 +1,31 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Description>Emby Plugin Template with simple UI</Description>
     <PackageTags>emby;plugin;pms;media;server;</PackageTags>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies> <!-- Ensures dependencies are copied -->
   </PropertyGroup>
+
   <ItemGroup>
-    <None Remove="Configuration\TraktSuggestions.html" />
-    <None Remove="ThumbImage.png" />
-  </ItemGroup>
-  <ItemGroup>
+    <!-- Embedded resources for your plugin -->
     <EmbeddedResource Include="Configuration\TraktSuggestions.html" />
     <EmbeddedResource Include="ThumbImage.png" />
   </ItemGroup>
+
   <ItemGroup>
-    <PackageReference Include="MediaBrowser.Server.Core" Version="4.8.0.38-beta" />
+    <!-- Required dependencies -->
+    <PackageReference Include="MediaBrowser.Server.Core" Version="4.8.10" />
     <PackageReference Include="System.Memory" Version="4.6.0" />
     <PackageReference Include="Trakt.NET" Version="1.4.0" />
+    <PackageReference Include="WebSocketSharp-netstandard" Version="1.0.1" /> <!-- Explicitly add websocket-sharp -->
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Ensure required assemblies are copied during build -->
+    <None Update="bin/Debug/netstandard2.0/*.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
