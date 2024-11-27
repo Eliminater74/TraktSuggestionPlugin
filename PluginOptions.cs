@@ -3,16 +3,13 @@
     using System.ComponentModel;
 
     using Emby.Web.GenericEdit;
-    using Emby.Web.GenericEdit.Validation;
-
     using MediaBrowser.Model.Attributes;
-    using MediaBrowser.Model.GenericEdit;
 
     public class PluginOptions : EditableOptionsBase
     {
         public override string EditorTitle => "Trakt Suggestion Plugin Settings";
 
-        public override string EditorDescription => "Configure your Trakt credentials below. Provide your Trakt Username, Access Token, and Logging Options.";
+        public override string EditorDescription => "Provide your Trakt credentials below and configure logging options.";
 
         [DisplayName("Trakt Username")]
         [Description("Enter your Trakt username.")]
@@ -20,12 +17,12 @@
 
         [DisplayName("Trakt Access Token")]
         [Description("Enter your Trakt access token.")]
-        [MediaBrowser.Model.Attributes.Required]
+        [Required]
         public string AccessToken { get; set; }
 
         [DisplayName("Enable Detailed Logging")]
-        [Description("Turn on detailed logging for debugging purposes.")]
-        public bool EnableDetailedLogging { get; set; } // New property for detailed logging
+        [Description("Enable detailed logging for debugging purposes.")]
+        public bool EnableDetailedLogging { get; set; } // Added detailed logging option
 
         public PluginOptions()
         {

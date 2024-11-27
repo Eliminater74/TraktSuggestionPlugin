@@ -1,57 +1,51 @@
 ﻿namespace TraktSuggestionPlugin
 {
-    using System;
-    using System.IO;
-
     using MediaBrowser.Common;
     using MediaBrowser.Common.Plugins;
-    using MediaBrowser.Controller.Plugins;
-    using MediaBrowser.Model.Drawing;
     using MediaBrowser.Model.Logging;
+    using MediaBrowser.Controller.Library;
+    using MediaBrowser.Controller.Plugins;
 
-    public class Plugin : BasePluginSimpleUI<PluginOptions>, IHasThumbImage
+    public class Plugin : BasePluginSimpleUI<PluginOptions>
     {
-        private readonly Guid id = new Guid("11111111-2222-3333-4444-555555555555");
-        private readonly ILogger logger;
+        private readonly ILogger _logger;
+        private readonly ILibraryManager _libraryManager;
 
-        public Plugin(IApplicationHost applicationHost, ILogManager logManager) : base(applicationHost)
+        public Plugin(IApplicationHost applicationHost, ILogManager logManager, ILibraryManager libraryManager)
+            : base(applicationHost)
         {
-            this.logger = logManager.GetLogger(this.Name);
-            this.logger.Info("Trakt Suggestion Plugin ({0}) is getting loaded", this.Name);
+            _logger = logManager.GetLogger(Name);
+            _libraryManager = libraryManager;
+            _logger.Info("Trakt Suggestion Plugin loaded.");
         }
-
-        public override string Description => "Provides personalized movie suggestions from Trakt.";
-
-        public override Guid Id => this.id;
 
         public override string Name => "Trakt Suggestion Plugin";
 
-        public ImageFormat ThumbImageFormat => ImageFormat.Png;
+        public override string Description => "Fetches Trakt movie recommendations and compares them with your Emby library.";
 
-        public Stream GetThumbImage()
+        public async void FetchAndLogRecommendations()
         {
-            var type = this.GetType();
-            return type.Assembly.GetManifestResourceStream(type.Namespace + ".ThumbImage.png");
-        }
+            var options = GetOptions();
+            var traktService = new Services.TraktService(options.AccessToken);
+            var embyHelper = new Services.EmbyLibraryHelper(_libraryManager);
+            var processor = new Services.SuggestionProcessor(traktService, embyHelper);
 
-        protected override void OnOptionsSaved(PluginOptions options)
-        {
-            this.logger.Info("Trakt Suggestion Plugin options have been updated: Username={0}, AccessToken={1}, DetailedLogging={2}",
-                options.Username,
-                options.AccessToken,
-                options.EnableDetailedLogging);
+            var (inLibrary, notInLibrary) = await processor.GetSuggestionsAsync();
+
+            Log($"Movies in your library: {string.Join(", ", inLibrary)}");
+            Log($"Movies not in your library: {string.Join(", ", notInLibrary)}");
         }
 
         public void Log(string message)
         {
-            var options = GetOptions(); // Access configuration using GetOptions()
+            var options = GetOptions();
             if (options.EnableDetailedLogging)
             {
-                logger.Debug($"[Detailed Log] {message}");
+                _logger.Debug($"[Detailed Log] {message}");
             }
             else
             {
-                logger.Info(message);
+                _logger.Info(message);
             }
         }
     }
