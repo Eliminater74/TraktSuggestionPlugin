@@ -19,6 +19,16 @@
     <PackageReference Include="System.Memory" Version="4.6.0" />
     <PackageReference Include="Trakt.NET" Version="1.4.0" />
     <PackageReference Include="WebSocketSharp-netstandard" Version="1.0.1" />
+    <!-- Fody and Costura -->
+    <PackageReference Include="Fody" Version="6.8.2" PrivateAssets="all" />
+    <PackageReference Include="Costura.Fody" Version="6.0.0-beta0000" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Ensure the FodyWeavers.xml file is copied -->
+    <None Update="FodyWeavers.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
