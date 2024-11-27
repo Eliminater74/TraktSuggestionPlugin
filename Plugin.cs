@@ -5,6 +5,9 @@
     using MediaBrowser.Model.Logging;
     using MediaBrowser.Controller.Library;
     using MediaBrowser.Controller.Plugins;
+    using System;
+    using System.IO;
+    using System.Reflection;
 
     public class Plugin : BasePluginSimpleUI<PluginOptions>
     {
@@ -16,7 +19,12 @@
         {
             _logger = logManager.GetLogger(Name);
             _libraryManager = libraryManager;
+
+            // Log plugin load
             _logger.Info("Trakt Suggestion Plugin loaded.");
+
+            // Explicitly load WebSocketSharp-netstandard
+            LoadDependency("WebSocketSharp-netstandard.dll");
         }
 
         public override string Name => "Trakt Suggestion Plugin";
@@ -46,6 +54,27 @@
             else
             {
                 _logger.Info(message);
+            }
+        }
+
+        private void LoadDependency(string assemblyName)
+        {
+            try
+            {
+                var assemblyPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "plugins", assemblyName);
+                if (File.Exists(assemblyPath))
+                {
+                    Assembly.LoadFrom(assemblyPath);
+                    _logger.Info($"Successfully loaded dependency: {assemblyName}");
+                }
+                else
+                {
+                    _logger.Warn($"Dependency not found: {assemblyName}. Please ensure it exists in the plugins directory.");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Error($"Error loading dependency {assemblyName}: {ex.Message}");
             }
         }
     }
