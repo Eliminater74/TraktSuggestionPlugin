@@ -12,7 +12,7 @@
     {
         public override string EditorTitle => "Trakt Suggestion Plugin Settings";
 
-        public override string EditorDescription => "Configure your Trakt credentials below. Provide your Trakt Username and Access Token.";
+        public override string EditorDescription => "Configure your Trakt credentials below. Provide your Trakt Username, Access Token, and Logging Options.";
 
         [DisplayName("Trakt Username")]
         [Description("Enter your Trakt username.")]
@@ -23,18 +23,15 @@
         [MediaBrowser.Model.Attributes.Required]
         public string AccessToken { get; set; }
 
+        [DisplayName("Enable Detailed Logging")]
+        [Description("Turn on detailed logging for debugging purposes.")]
+        public bool EnableDetailedLogging { get; set; } // New property for detailed logging
+
         public PluginOptions()
         {
             Username = string.Empty;
             AccessToken = string.Empty;
-        }
-
-        protected override void Validate(ValidationContext context)
-        {
-            if (string.IsNullOrEmpty(AccessToken))
-            {
-                context.AddValidationError(nameof(AccessToken), "Access Token is required.");
-            }
+            EnableDetailedLogging = false; // Default to false
         }
     }
 }

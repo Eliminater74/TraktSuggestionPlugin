@@ -11,7 +11,7 @@
 
     public class Plugin : BasePluginSimpleUI<PluginOptions>, IHasThumbImage
     {
-        private readonly Guid id = new Guid("90011765-13A5-4699-91E1-830AAC746FAB"); // Replace with your GUID
+        private readonly Guid id = new Guid("11111111-2222-3333-4444-555555555555");
         private readonly ILogger logger;
 
         public Plugin(IApplicationHost applicationHost, ILogManager logManager) : base(applicationHost)
@@ -36,7 +36,23 @@
 
         protected override void OnOptionsSaved(PluginOptions options)
         {
-            this.logger.Info("Trakt Suggestion Plugin options have been updated: Username={0}, AccessToken={1}", options.Username, options.AccessToken);
+            this.logger.Info("Trakt Suggestion Plugin options have been updated: Username={0}, AccessToken={1}, DetailedLogging={2}",
+                options.Username,
+                options.AccessToken,
+                options.EnableDetailedLogging);
+        }
+
+        public void Log(string message)
+        {
+            var options = GetOptions(); // Access configuration using GetOptions()
+            if (options.EnableDetailedLogging)
+            {
+                logger.Debug($"[Detailed Log] {message}");
+            }
+            else
+            {
+                logger.Info(message);
+            }
         }
     }
 }
