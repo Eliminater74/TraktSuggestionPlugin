@@ -1,5 +1,9 @@
 ﻿<Weavers xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="FodyWeavers.xsd">
   <Costura>
-    <DisableCompression>true</DisableCompression>
+    <IncludeAssemblies>
+      Trakt.NET
+      System.Memory
+      WebSocketSharp-netstandard
+    </IncludeAssemblies>
   </Costura>
 </Weavers>
