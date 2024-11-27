@@ -34,14 +34,18 @@
   <PropertyGroup>
     <!-- Ensure all dependencies are included for Costura -->
     <PreserveCompilationContext>true</PreserveCompilationContext>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- Ensure the necessary assemblies are always copied -->
+    <!-- Explicitly include missing assemblies -->
     <Reference Include="WebSocketSharp-netstandard">
       <HintPath>$(UserProfile)\.nuget\packages\websocketsharp-netstandard\1.0.1\lib\netstandard2.0\WebSocketSharp-netstandard.dll</HintPath>
       <Private>true</Private>
-      <CopyLocal>true</CopyLocal>
+    </Reference>
+    <Reference Include="TraktSuggestionPlugin">
+      <HintPath>bin\Debug\netstandard2.0\TraktSuggestionPlugin.dll</HintPath>
+      <Private>true</Private>
     </Reference>
   </ItemGroup>
 
