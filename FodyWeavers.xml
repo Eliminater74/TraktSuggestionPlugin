@@ -13,7 +13,6 @@
       Microsoft.Bcl.AsyncInterfaces
       Newtonsoft.Json
       System.Buffers
-      System.Memory
       System.Numerics.Vectors
       System.Runtime.CompilerServices.Unsafe
       System.Threading.Tasks.Extensions
