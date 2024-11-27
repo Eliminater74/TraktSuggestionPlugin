@@ -3,7 +3,20 @@
     <IncludeAssemblies>
       Trakt.NET
       System.Memory
-      WebSocketSharp-netstandard
+      WebSocketSharp.Core
+      Emby.Media.Model
+      Emby.Naming
+      Emby.Web.GenericEdit
+      MediaBrowser.Common
+      MediaBrowser.Controller
+      MediaBrowser.Model
+      Microsoft.Bcl.AsyncInterfaces
+      Newtonsoft.Json
+      System.Buffers
+      System.Memory
+      System.Numerics.Vectors
+      System.Runtime.CompilerServices.Unsafe
+      System.Threading.Tasks.Extensions
     </IncludeAssemblies>
   </Costura>
 </Weavers>
