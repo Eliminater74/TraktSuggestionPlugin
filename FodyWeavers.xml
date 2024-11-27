@@ -3,7 +3,6 @@
     <IncludeAssemblies>
       Trakt.NET
       System.Memory
-      WebSocketSharp.Core
       Emby.Media.Model
       Emby.Naming
       Emby.Web.GenericEdit
