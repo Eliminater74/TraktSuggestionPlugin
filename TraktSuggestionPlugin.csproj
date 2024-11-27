@@ -17,5 +17,8 @@
     <PackageReference Include="System.Memory" Version="4.6.0" />
     <PackageReference Include="Trakt.NET" Version="1.4.0" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Services\" />
+  </ItemGroup>
 
 </Project>
