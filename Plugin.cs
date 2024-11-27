@@ -4,10 +4,10 @@
     using MediaBrowser.Common.Plugins;
     using MediaBrowser.Model.Logging;
     using MediaBrowser.Controller.Library;
+    using MediaBrowser.Controller.Plugins;
     using System;
     using System.IO;
     using System.Reflection;
-    using MediaBrowser.Controller.Plugins;
 
     public class Plugin : BasePluginSimpleUI<PluginOptions>
     {
@@ -27,17 +27,25 @@
             AppDomain.CurrentDomain.AssemblyResolve += (sender, args) =>
             {
                 var assemblyName = new AssemblyName(args.Name).Name;
-                string pluginDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-                string filePath = Path.Combine(pluginDirectory, $"{assemblyName}.dll");
+                _logger.Info($"Attempting to resolve assembly: {assemblyName}");
 
-                if (File.Exists(filePath))
+                // Look for embedded assemblies
+                string resourceName = $"TraktSuggestionPlugin.{assemblyName}.dll";
+
+                using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName))
                 {
-                    _logger.Info($"Successfully loaded dependency: {assemblyName}");
-                    return Assembly.LoadFrom(filePath);
-                }
+                    if (stream == null)
+                    {
+                        _logger.Warn($"Resource not found: {resourceName}");
+                        return null;
+                    }
 
-                _logger.Warn($"Dependency not found: {assemblyName}. Please ensure it exists in the plugins directory.");
-                return null;
+                    byte[] assemblyData = new byte[stream.Length];
+                    stream.Read(assemblyData, 0, assemblyData.Length);
+                    _logger.Info($"Successfully resolved assembly: {assemblyName}");
+
+                    return Assembly.Load(assemblyData);
+                }
             };
 
             // Example of explicitly ensuring WebSocketSharp-netstandard.dll is loaded
