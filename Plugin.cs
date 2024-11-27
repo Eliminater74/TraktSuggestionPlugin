@@ -23,7 +23,24 @@
             // Log plugin load
             _logger.Info("Trakt Suggestion Plugin loaded.");
 
-            // Explicitly load WebSocketSharp-netstandard
+            // Register the assembly resolve event
+            AppDomain.CurrentDomain.AssemblyResolve += (sender, args) =>
+            {
+                var assemblyName = new AssemblyName(args.Name).Name;
+                string pluginDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                string filePath = Path.Combine(pluginDirectory, $"{assemblyName}.dll");
+
+                if (File.Exists(filePath))
+                {
+                    _logger.Info($"Successfully loaded dependency: {assemblyName}");
+                    return Assembly.LoadFrom(filePath);
+                }
+
+                _logger.Warn($"Dependency not found: {assemblyName}. Please ensure it exists in the plugins directory.");
+                return null;
+            };
+
+            // Load your specific dependencies
             LoadDependency("WebSocketSharp-netstandard.dll");
         }
 
