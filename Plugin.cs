@@ -4,10 +4,10 @@
     using MediaBrowser.Common.Plugins;
     using MediaBrowser.Model.Logging;
     using MediaBrowser.Controller.Library;
-    using MediaBrowser.Controller.Plugins;
     using System;
     using System.IO;
     using System.Reflection;
+    using MediaBrowser.Controller.Plugins;
 
     public class Plugin : BasePluginSimpleUI<PluginOptions>
     {
@@ -23,7 +23,7 @@
             // Log plugin load
             _logger.Info("Trakt Suggestion Plugin loaded.");
 
-            // Register the assembly resolve event
+            // Register the assembly resolve event to handle missing dependencies
             AppDomain.CurrentDomain.AssemblyResolve += (sender, args) =>
             {
                 var assemblyName = new AssemblyName(args.Name).Name;
@@ -40,8 +40,8 @@
                 return null;
             };
 
-            // Load your specific dependencies
-            LoadDependency("WebSocketSharp-netstandard.dll");
+            // Example of explicitly ensuring WebSocketSharp-netstandard.dll is loaded
+            EnsureDependencyLoaded("WebSocketSharp-netstandard.dll");
         }
 
         public override string Name => "Trakt Suggestion Plugin";
@@ -74,11 +74,14 @@
             }
         }
 
-        private void LoadDependency(string assemblyName)
+        // This method ensures the dependency is loaded correctly.
+        private void EnsureDependencyLoaded(string assemblyName)
         {
             try
             {
-                var assemblyPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "plugins", assemblyName);
+                var pluginDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "plugins");
+                var assemblyPath = Path.Combine(pluginDirectory, assemblyName);
+
                 if (File.Exists(assemblyPath))
                 {
                     Assembly.LoadFrom(assemblyPath);
