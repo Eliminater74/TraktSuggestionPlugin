@@ -31,4 +31,18 @@
     </None>
   </ItemGroup>
 
+  <PropertyGroup>
+    <!-- Ensure all dependencies are included for Costura -->
+    <PreserveCompilationContext>true</PreserveCompilationContext>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Ensure the necessary assemblies are always copied -->
+    <Reference Include="WebSocketSharp-netstandard">
+      <HintPath>$(UserProfile)\.nuget\packages\websocketsharp-netstandard\1.0.1\lib\netstandard2.0\WebSocketSharp-netstandard.dll</HintPath>
+      <Private>true</Private>
+      <CopyLocal>true</CopyLocal>
+    </Reference>
+  </ItemGroup>
+
 </Project>
